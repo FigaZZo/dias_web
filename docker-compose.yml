@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_DB: laba-chat-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    networks:
+      - laba-net
+
+  website:
+    build: ./website
+    container_name: website
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://postgres:admin@db:5432/laba-chat-db
+    depends_on:
+      - db
+    networks:
+      - laba-net
+
+  chat:
+    build: ./chat
+    container_name: chat
+    restart: always
+    networks:
+      - laba-net
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./nginx:/etc/nginx
+    depends_on:
+      - website
+      - chat
+    networks:
+      - laba-net
+
+networks:
+  laba-net:
+    driver: bridge

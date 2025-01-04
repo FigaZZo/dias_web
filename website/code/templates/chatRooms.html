@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Rooms</title>
+</head>
+<body>
+    <h1>Welcome to the Chat Rooms, {{ user.email }}</h1>
+
+    <h2>Create a New Room</h2>
+    <form id="create-room-form" action="/chats/" method="post">
+        <input type="text" name="roomName" placeholder="Enter room name" required minlength="6">
+        <button type="submit">Create Room</button>
+    </form>
+
+    <h2>Search Rooms</h2>
+    <form method="get" action="/chats/search/">
+        <input type="text" name="query" placeholder="Search rooms by name" required minlength="6">
+        <button type="submit">Search</button>
+    </form>
+
+    <h2>Your Rooms</h2>
+    <div id="rooms-list">
+        {% if rooms %}
+            <ul>
+                {% for room in rooms %}
+                    <li>
+                        <a href="/chats/{{ room.id }}">{{ room.name }}</a>
+                        <form action="/chats/{{ room.id }}/delete" method="post" style="display:inline;">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No rooms available.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+</head>
+<body>
+    <h1>Chat Room</h1>
+    <div id="chatBox"></div>
+    <input id="messageInput" type="text" placeholder="Enter message">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        const room_id = "{{ room.id }}";
+
+        console.log("Room ID:", room_id);    
+
+        const WSUrl = "/ws/" + room_id.toString();
+        console.log(WSUrl)
+        const socket = new WebSocket(WSUrl);
+
+        socket.onopen = function() {
+            console.log("WebSocket connection established");
+            document.getElementById("chatBox").innerHTML += `<div style="color: green;">WebSocket connection established</div>`;
+        };
+
+        socket.onmessage = function(event) {
+            const message = event.data;
+            document.getElementById("chatBox").innerHTML += `<div>${message}</div>`;
+        };
+
+        socket.onerror = function(error) {
+            console.error("WebSocket error:", error);
+            document.getElementById("chatBox").innerHTML += `<div style="color: red;">WebSocket error: ${error.message}</div>`;
+        };
+
+        socket.onclose = function(event) {
+            console.log("WebSocket connection closed:", event);
+            document.getElementById("chatBox").innerHTML += `<div style="color: orange;">WebSocket connection closed</div>`;
+        };
+
+
+        function sendMessage() {
+            const input = document.getElementById("messageInput");
+            if (input.value) {
+                if (socket.readyState === WebSocket.OPEN) {  
+                    socket.send(input.value);  
+                    input.value = "";          
+                } else {
+                    console.error("WebSocket is not open. Cannot send message.");
+                    document.getElementById("chatBox").innerHTML += `<div style="color: red;">WebSocket is not open. Cannot send message.</div>`;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
