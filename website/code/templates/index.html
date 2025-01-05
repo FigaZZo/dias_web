@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <title>Welcome</title>
 </head>
-<body>
-    <h1>Welcome to the Chat App</h1>
-    <p>Choose an option below:</p>
-    <a href="/register">Register</a> | <a href="/login">Login</a>
-</body>
+{% if user %}
+    <body>
+        <h1>Welcome to the Chat App, {{ user }}</h1>
+        <p>Choose an option below:</p>
+        <a href="/chats">Your chats</a> | <a href="/logout">Logout</a>
+    </body>
+{% else %}
+    <body>
+        <h1>Welcome to the Chat App</h1>
+        <p>Choose an option below:</p>
+        <a href="/register">Register</a> | <a href="/login">Login</a>
+    </body>
+{% endif %}
 </html>

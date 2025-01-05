@@ -12,12 +12,8 @@
     <button onclick="sendMessage()">Send</button>
 
     <script>
-        const room_id = "{{ room.id }}";
 
-        console.log("Room ID:", room_id);    
-
-        const WSUrl = "/ws/" + room_id.toString();
-        console.log(WSUrl)
+        const WSUrl = "/ws";
         const socket = new WebSocket(WSUrl);
 
         socket.onopen = function() {
@@ -54,5 +50,6 @@
             }
         }
     </script>
+    <button onclick="history.back()">Go Back</button>
 </body>
 </html>

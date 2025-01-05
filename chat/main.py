@@ -19,10 +19,10 @@ async def broadcast(roomId: int, message: str):
         for connection in connections[roomId]:
             await connection.send_text(message)
 
-@app.websocket("/ws/{roomId}")
-async def websocketEndpoint(websocket: WebSocket, roomId: int, sessionToken: str = Cookie(None)):
+@app.websocket("/ws")
+async def websocketEndpoint(websocket: WebSocket, roomId: str = Cookie(None), sessionToken: str = Cookie(None)):
     logging.info(sessionToken)
-    if sessionToken is Cookie(None):
+    if sessionToken is Cookie(None) or roomId is Cookie(None):
         raise HTTPException(
             status_code = status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated",
